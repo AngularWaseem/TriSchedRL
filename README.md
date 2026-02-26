@@ -14,12 +14,12 @@ This repository contains the complete modular implementation, experimental pipel
 
 ## Key Features
 
-- ✅ Guarded Deep Reinforcement Learning Scheduler
-- ✅ SLA-Aware Policy Learning
-- ✅ Energy and Latency Joint Optimization
-- ✅ Edge–Cloud Continuum Simulation
-- ✅ Modular and Reproducible Research Pipeline
-- ✅ Ready for Academic Benchmarking and Extensions
+-  Guarded Deep Reinforcement Learning Scheduler
+-  SLA-Aware Policy Learning
+-  Energy and Latency Joint Optimization
+-  Edge–Cloud Continuum Simulation
+-  Modular and Reproducible Research Pipeline
+-  Ready for Academic Benchmarking and Extensions
 
 ---
 
@@ -195,16 +195,6 @@ You can extend TriSchedRL by:
 
 ---
 
-## Reproducibility
-
-| Feature | Status |
-|---|---|
-| Fixed random seeds | ✅ |
-| Hyperparameters in YAML | ✅ |
-| Automatic experiment logging | ✅ |
-| Deterministic training config | ✅ |
-
----
 
 ## Requirements
 
