@@ -273,14 +273,3 @@ This project is released under the **MIT License**. See [`LICENSE`](LICENSE) for
 
 ---
 
-## Citation
-
-If you use this repository in your research, please cite:
-
-```bibtex
-@article{trischedrl,
-  title={TriSchedRL: A Guarded Deep Reinforcement Learning Framework for SLA Latency and Energy Aware IoT Task Scheduling in Edge--Cloud Environments},
-  journal={},
-  year={202}
-}
-```
