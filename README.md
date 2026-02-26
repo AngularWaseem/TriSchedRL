@@ -45,11 +45,14 @@ Modern IoT environments generate heterogeneous workloads requiring real-time pro
 
 | Module | Description |
 |---|---|
-| Environment Simulator | Models edge, fog, and cloud nodes |
-| Guard Engine | Enforces SLA constraints during RL action selection |
-| DRL Agent | Policy learning using deep neural networks |
-| Scheduler Core | Executes decisions and monitors system metrics |
-| Evaluation Engine | Computes performance indicators |
+| `src/env` | Edge–cloud environment simulation |
+| `src/agents` | Actor-critic policy network and replay buffer |
+| `src/guard` | SLA guard with feasibility checking and repair |
+| `src/meta` | Meta-controller for adaptive policy signals |
+| `src/predictors` | Latency, energy, and SLA risk predictors |
+| `src/baselines` | Baseline scheduling algorithms for comparison |
+| `src/evaluation` | Metrics logging and performance evaluation |
+| `src/workloads` | IoT task generation and workload modeling |
 
 ---
 
@@ -58,50 +61,76 @@ Modern IoT environments generate heterogeneous workloads requiring real-time pro
 ```
 TriSchedRL/
 │
-├── data/
-│   ├── workloads/
-│   ├── configs/
-│   └── synthetic_generator.py
-│
-├── env/
-│   ├── edge_cloud_env.py
-│   ├── resource_model.py
-│   └── sla_constraints.py
-│
-├── agent/
-│   ├── policy_network.py
-│   ├── guarded_rl_agent.py
-│   └── replay_buffer.py
-│
-├── scheduler/
-│   ├── tri_scheduler.py
-│   └── decision_engine.py
-│
-├── guard/
-│   ├── sla_guard.py
-│   └── safety_checker.py
-│
-├── training/
-│   ├── train.py
-│   ├── evaluate.py
-│   └── hyperparams.yaml
-│
-├── utils/
-│   ├── metrics.py
-│   ├── logger.py
-│   └── visualization.py
-│
-├── experiments/
-│   ├── baseline_comparisons/
-│   └── ablation_studies/
-│
-├── results/
-│   ├── logs/
-│   └── figures/
-│
-├── requirements.txt
 ├── README.md
-└── LICENSE
+├── requirements.txt
+│
+├── configs/
+│   ├── agent.yaml
+│   ├── env.yaml
+│   ├── meta.yaml
+│   └── workload.yaml
+│
+├── scripts/
+│   ├── train_trischedrl.py
+│   ├── evaluate_and_plot.py
+│   ├── run_baselines.py
+│   ├── run_all.sh
+│   └── smoke_test_guard.py
+│
+├── src/
+│   ├── agents/
+│   │   ├── actor_critic.py
+│   │   ├── networks.py
+│   │   ├── replay_buffer.py
+│   │   ├── state_vectorizer.py
+│   │   └── __init__.py
+│   │
+│   ├── baselines/
+│   │   ├── eft.py
+│   │   ├── fixed_weight_sum.py
+│   │   ├── least_energy.py
+│   │   ├── minmin_maxmin.py
+│   │   └── __init__.py
+│   │
+│   ├── env/
+│   │   ├── edgecloud_env.py
+│   │   ├── network.py
+│   │   ├── resources.py
+│   │   ├── sla.py
+│   │   └── __init__.py
+│   │
+│   ├── evaluation/
+│   │   ├── logger.py
+│   │   ├── metrics.py
+│   │   └── __init__.py
+│   │
+│   ├── guard/
+│   │   ├── feasibility.py
+│   │   ├── fallback.py
+│   │   ├── repair.py
+│   │   └── __init__.py
+│   │
+│   ├── meta/
+│   │   ├── meta_controller.py
+│   │   ├── signals.py
+│   │   └── __init__.py
+│   │
+│   ├── predictors/
+│   │   ├── aggregator.py
+│   │   ├── energy_predictor.py
+│   │   ├── feature_builder.py
+│   │   ├── latency_predictor.py
+│   │   ├── sla_risk_predictor.py
+│   │   └── __init__.py
+│   │
+│   └── workloads/
+│       ├── generators.py
+│       ├── task.py
+│       └── __init__.py
+│
+└── tests/
+    ├── test_env_step.py
+    └── test_guard.py
 ```
 
 ---
@@ -135,26 +164,49 @@ pip install -r requirements.txt
 ### Train the Guarded RL Scheduler
 
 ```bash
-python training/train.py
+python scripts/train_trischedrl.py
 ```
 
-### Evaluate Performance
+### Evaluate and Plot Results
 
 ```bash
-python training/evaluate.py
+python scripts/evaluate_and_plot.py
 ```
 
-### Visualize Results
+### Run Baseline Comparisons
 
 ```bash
-python utils/visualization.py
+python scripts/run_baselines.py
+```
+
+### Run Full Pipeline
+
+```bash
+bash scripts/run_all.sh
+```
+
+### Smoke Test the Guard Module
+
+```bash
+python scripts/smoke_test_guard.py
 ```
 
 ---
 
-## Evaluation Metrics
+## Configuration
 
-The framework evaluates scheduling performance using:
+All hyperparameters and settings are managed via YAML files in the `configs/` directory:
+
+| File | Purpose |
+|---|---|
+| `agent.yaml` | RL agent hyperparameters (learning rate, batch size, etc.) |
+| `env.yaml` | Edge–cloud environment settings |
+| `meta.yaml` | Meta-controller configuration |
+| `workload.yaml` | IoT workload generation parameters |
+
+---
+
+## Evaluation Metrics
 
 | Metric | Description |
 |---|---|
@@ -167,34 +219,30 @@ The framework evaluates scheduling performance using:
 
 ---
 
-## Experimental Design
+## Baselines
 
-TriSchedRL supports:
-
-- Synthetic IoT workloads
-- Edge–Cloud heterogeneous resources
-- Dynamic arrival rates
-- Baseline comparison experiments
-
-**Baselines include:**
-
-- Heuristic Scheduling
-- Metaheuristic Optimization
-- Standard DRL Scheduling
+| Baseline | File | Description |
+|---|---|---|
+| EFT | `eft.py` | Earliest Finish Time heuristic |
+| Min-Min / Max-Min | `minmin_maxmin.py` | Classic task-to-resource mapping |
+| Least Energy | `least_energy.py` | Energy-greedy assignment |
+| Fixed Weight Sum | `fixed_weight_sum.py` | Static multi-objective weighted sum |
 
 ---
 
-## Extending the Framework
+## Testing
 
-You can extend TriSchedRL by:
+```bash
+python -m pytest tests/
+```
 
-- Adding new RL algorithms (PPO, SAC, DDPG)
-- Integrating federated learning
-- Introducing new SLA constraints
-- Deploying on real edge devices
+| Test | Coverage |
+|---|---|
+| `test_env_step.py` | Environment step logic and state transitions |
+| `test_guard.py` | Guard module feasibility and repair checks |
+
 
 ---
-
 
 ## Requirements
 
@@ -231,8 +279,8 @@ If you use this repository in your research, please cite:
 
 ```bibtex
 @article{trischedrl,
-  title={TriSchedRL: A Guarded Deep Reinforcement Learning Framework for SLA Latency and Energy Aware IoT Task Scheduling in Edge–Cloud Environments},
+  title={TriSchedRL: A Guarded Deep Reinforcement Learning Framework for SLA Latency and Energy Aware IoT Task Scheduling in Edge--Cloud Environments},
   journal={},
-  year={2025}
+  year={202}
 }
 ```
