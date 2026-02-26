@@ -1,0 +1,8 @@
+gamma: 0.99
+lr_actor: 1.0e-4
+lr_critic: 1.0e-3
+batch_size: 128
+entropy_coef: 0.01
+grad_clip: 1.0
+device: cpu
+replay_capacity: 100000

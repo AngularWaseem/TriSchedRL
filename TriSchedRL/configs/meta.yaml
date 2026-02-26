@@ -1,0 +1,10 @@
+w_min: 0.10
+w_max: 0.80
+ema: 0.85
+k_sla: 2.5
+k_lat: 1.5
+k_eng: 1.2
+base_alpha: 0.40
+base_beta: 0.35
+base_gamma: 0.25
+signal_window: 50

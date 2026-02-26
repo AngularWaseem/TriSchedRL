@@ -1,0 +1,7 @@
+seed: 123
+mode: poisson
+horizon_s: 60.0
+lambda_per_s: 3.0
+burst_lambda_per_s: 9.0
+on_mean_s: 4.0
+off_mean_s: 3.0
